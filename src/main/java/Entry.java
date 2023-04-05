@@ -1,9 +1,11 @@
+import java_cup.parser;
 import jflex.exceptions.SilentExit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java_cup.runtime.lr_parser;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -13,6 +15,10 @@ public class Main {
         };
         FileReader[] files = getFiles(filenames);
         runLexer(filenames, files);
+        lr_parser lr_parser = new parser();
+
+
+
     }
 
     private static void runLexer(String[] filenames, FileReader[] files) throws IOException {
@@ -21,7 +27,11 @@ public class Main {
         for (FileReader f : files) {
             lexer = new Lexer(f);
             System.out.println("\nArquivo: " + filenames[i]);
-            System.out.println(lexer.yylex());
+            try{
+                System.out.println("Main.runLexer");
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             i++;
         }
     }
