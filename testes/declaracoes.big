@@ -1,0 +1,6 @@
+program (declaracoes):
+begin
+    int i = 0;
+    char a = 'b';
+    float d = 22 and 22;
+end

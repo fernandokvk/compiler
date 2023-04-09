@@ -4,11 +4,13 @@ import cup.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
 public class Entry {
     public static void main(String[] args) throws IOException {
         String[] filenames = {
-                "testes/expressoes.big",
-                "testes/controle.big",
+//                "testes/expressoes.big",
+                "testes/declaracoes.big",
+//                "testes/controle.big",
         };
         FileReader[] files = getFiles(filenames);
         runLexer(filenames, files);
@@ -21,11 +23,13 @@ public class Entry {
         for (FileReader f : files) {
             lexer = new Lexer(f);
             System.out.println("\nArquivo: " + filenames[i]);
-            try{
+            try {
                 parser parser = new parser(lexer);
                 parser.parse();
-                System.out.println("Fim "+filenames[i]);
-            } catch (Exception e){
+                System.out.println("Fim " + filenames[i]);
+            } catch (Lexer.ErroLexico e) {
+                System.err.println(e.getMessage());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             i++;

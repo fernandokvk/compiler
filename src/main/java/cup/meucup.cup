@@ -1,5 +1,60 @@
 package cup;
 import java_cup.runtime.*;
+import java.io.*;
+import java.util.*;
+import misc.TokenInfo;
+
+parser code {:
+//Comentários abaixo obtidos do manual (https://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html)
+/*
+This method should be called whenever an error message is to be issued.
+In the default implementation of this method, the first parameter provides the text of a
+message which is printed on System.err and the second parameter is simply ignored.
+It is very typical to override this method in order to provide a more sophisticated error reporting mechanism.
+*/
+
+    public void report_error(String message, Object info) {
+            if (info instanceof Symbol) {
+                Symbol symbol = (Symbol) info;
+                TokenInfo tokenInfo = symbol.value instanceof TokenInfo ? (TokenInfo) symbol.value : null;
+
+                if (tokenInfo != null) {
+                    int linha = tokenInfo.linha;
+                    int coluna = tokenInfo.coluna;
+                    String lexema = tokenInfo.lexema;
+                    System.err.println("Erro sintatico - linha: " + (linha + 1) + ", coluna " + (coluna + 1) + ", lexema: '"+ lexema +"' - " + message);
+                } else {
+                    System.err.println("Erro sintatico: " + message);
+                }
+            } else {
+                System.err.println("Erro sintatico: " + message);
+            }
+        }
+/*
+This method should be called whenever a non-recoverable error occurs.
+It responds by calling report_error(), then aborts parsing by calling the parser method done_parsing(),
+and finally throws an exception. (In general done_parsing() should be called at any point that parsing needs to be terminated early).
+*/
+    public void report_fatal_error(String message, Object info) {
+        report_error("Erro fatal: " + message, info);
+        System.exit(1);
+    }
+/*
+This method is called by the parser if it is unable to recover from a syntax error.
+In the default implementation it calls: report_fatal_error("Couldn't repair and continue parse", null);.
+*/
+    public void unrecovered_syntax_error(Symbol cur_token) {
+        report_fatal_error("O analisador lexico falhou e nao se recuperou", cur_token);
+    }
+/*
+This method is called by the parser as soon as a syntax error is detected (but before error recovery is attempted).
+In the default implementation it calls: report_error("Syntax error", null);.
+*/
+        public void syntax_error(Symbol cur_token){
+            report_error("Erro sintatico", cur_token);
+        }
+:};
+
 
 terminal PRGRM_INI, PRGRM_FIM, PRGRM_DEF;
 terminal VIRGULA, DOIS_PONTOS, PT_VIRGULA;
@@ -14,7 +69,7 @@ terminal INTEIRO, FLUTUANTE, ID, CARACTERE;
 terminal BOOL_TRUE, BOOL_FALSE;
 
 nonterminal programa, init_programa, instrucoes, instrucao;
-nonterminal literal, termo_bool, termo;
+nonterminal literal, termo;
 nonterminal instrucao_fluxo, instrucao_loop;
 nonterminal bloco_if, bloco_if_else;
 nonterminal bloco_for, bloco_while, bloco_do_while;
@@ -32,7 +87,7 @@ precedence left MUL, DIV;
 
 start with programa;
 
-init_programa ::= PRGRM_DEF L_PARENTESES ID R_PARENTESES DOIS_PONTOS {:System.out.println("Reconhecido <init_programa>");:};
+init_programa ::= PRGRM_DEF L_PARENTESES ID R_PARENTESES DOIS_PONTOS {:/*blbalbal */:};
 programa ::= init_programa PRGRM_INI PRGRM_FIM | init_programa PRGRM_INI instrucoes PRGRM_FIM;
 
 // ------------------------------ Expressões ------------------------------
