@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="flex + cup" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="Entry" />
+    <module name="impl" />
+    <method v="2">
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_clean flex" />
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_compile cup" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="compile" />
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

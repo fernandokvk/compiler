@@ -20,8 +20,15 @@
             <groupId>de.jflex</groupId>
             <artifactId>jflex</artifactId>
             <version>1.9.1</version>
-
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.objectweb.joram/jcup -->
+        <dependency>
+            <groupId>org.objectweb.joram</groupId>
+            <artifactId>jcup</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -38,7 +45,7 @@
                         <configuration>
                             <outputDirectory>src/main/java</outputDirectory>
                             <lexDefinitions>
-                                <lexDefinition>ebnf/ebnf.flex</lexDefinition>
+                                <lexDefinition>src/main/java/flex/meuflex.flex</lexDefinition>
 <!--                                <lexDefinition>src/main/lex/preprocessor.jflex</lexDefinition>-->
 <!--                                <lexDefinition>/pub/postprocessor.jflex</lexDefinition>-->
                             </lexDefinitions>

@@ -1,0 +1,8 @@
+import java_cup.runtime.*;
+
+terminal PTVIRG, MAIS, MENOS, INTEIRO;
+nonterminal expr_list, expr_ptv, expr;
+
+expr_list ::= expr_list expr_ptv | expr_ptv;
+expr_ptv ::= expr PTVIRG;
+expr ::= INTEIRO MAIS expr | INTEIRO MENOS expr | INTEIRO;

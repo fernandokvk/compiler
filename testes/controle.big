@@ -1,0 +1,15 @@
+program (controle):
+begin
+    int i = 0;
+    int n = 20;
+    for (i, i < n, i += 1){
+        i += 2;
+    }
+    for (int j = 20, j < i, j -= 2){
+        char abracadabra = 'c';
+    }
+    do {
+        int i = 0;
+        i += 20;
+    } while (i <= 200);
+end

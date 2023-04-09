@@ -1,0 +1,16 @@
+import java_cup.runtime.*;
+
+terminal PTVIRG, MAIS, MENOS;
+terminal Integer INTEIRO;
+nonterminal Object expr_list, expr_ptv;
+nonterminal Integer exrp;
+
+expr_list ::= expr_list expr_ptv | expr_ptv;
+expr_ptv ::= expr:e {:System.out.println("="+e);:} PTVIRG;
+expr ::=
+INTEIRO:n MAIS expr:e
+{:RESULT = new Integer(n.intValue() + e.intValue()) ;:}
+| INTEIRO:n MENOS expr:e
+{:RESULT = new Integer(n.intValue() - e.intValue()); :}
+| INTEIRO:n
+{:RESULT = n;:};

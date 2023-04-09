@@ -1,0 +1,120 @@
+package cup;
+import java_cup.runtime.*;
+
+terminal PRGRM_INI, PRGRM_FIM, PRGRM_DEF;
+terminal VIRGULA, DOIS_PONTOS, PT_VIRGULA;
+terminal L_PARENTESES, R_PARENTESES, L_CHAVES, R_CHAVES;
+terminal MENOR, MAIOR, IGUAL_IGUAL, DIFERENTE, MENOR_IGUAL, MAIOR_IGUAL;
+terminal IGUAL, ADD_IGUAL, SUB_IGUAL;
+terminal AND, OR;
+terminal ADD, SUB, MUL, DIV;
+terminal TIPO_CHAR, TIPO_INTEIRO, TIPO_FLUTUANTE;
+terminal IF, ELSE, WHILE, FOR, DO;
+terminal INTEIRO, FLUTUANTE, ID, CARACTERE;
+terminal BOOL_TRUE, BOOL_FALSE;
+
+nonterminal programa, init_programa, instrucoes, instrucao;
+nonterminal literal, termo_bool, termo;
+nonterminal instrucao_fluxo, instrucao_loop;
+nonterminal bloco_if, bloco_if_else;
+nonterminal bloco_for, bloco_while, bloco_do_while;
+nonterminal instrucao_definicao, instrucao_inicializacao, instrucao_declaracao, instrucao_atribuicao;
+
+nonterminal numero, tipo, operador_comparacao, operador_aritmetico, operador_logico, booleanos;
+nonterminal expressoes, expressao, operador, operador_atribuicao;
+
+precedence left IGUAL, ADD_IGUAL, SUB_IGUAL;
+precedence left OR;
+precedence left AND;
+precedence left IGUAL_IGUAL, DIFERENTE, MENOR, MAIOR, MENOR_IGUAL, MAIOR_IGUAL;
+precedence left ADD, SUB;
+precedence left MUL, DIV;
+
+start with programa;
+
+init_programa ::= PRGRM_DEF L_PARENTESES ID R_PARENTESES DOIS_PONTOS {:System.out.println("Reconhecido <init_programa>");:};
+programa ::= init_programa PRGRM_INI PRGRM_FIM | init_programa PRGRM_INI instrucoes PRGRM_FIM;
+
+// ------------------------------ Expressões ------------------------------
+expressoes ::= expressao | expressao operador expressoes;
+expressao ::= termo operador_comparacao termo
+           |  termo operador_aritmetico termo
+           | ID operador_logico booleanos
+           | booleanos operador_logico ID
+           | ID operador_logico ID
+           | termo
+           | operador termo;
+// ------------------------------ Instruções ------------------------------
+instrucoes ::= instrucao
+            | instrucao instrucoes;
+instrucao ::= instrucao_fluxo
+           | instrucao_loop
+           | instrucao_declaracao PT_VIRGULA
+           | instrucao_atribuicao PT_VIRGULA;
+
+instrucao_fluxo ::= bloco_if
+                 | bloco_if_else;
+
+instrucao_loop ::= bloco_for
+                | bloco_while
+                | bloco_do_while;
+
+instrucao_declaracao ::= instrucao_definicao
+                      | instrucao_inicializacao;
+//i = 0;
+instrucao_atribuicao ::= ID operador_atribuicao literal;
+//int i;
+instrucao_definicao ::= tipo ID;
+//int i = 0;
+instrucao_inicializacao ::= tipo ID operador_atribuicao literal;
+// ------------------------------ Loops ------------------------------
+
+bloco_if ::= IF L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+bloco_if_else ::= bloco_if ELSE L_CHAVES instrucoes R_CHAVES;
+
+bloco_for ::= FOR L_PARENTESES ID VIRGULA expressoes VIRGULA instrucao_atribuicao R_PARENTESES L_CHAVES instrucoes R_CHAVES
+           | FOR L_PARENTESES instrucao_inicializacao VIRGULA expressoes VIRGULA instrucao_atribuicao R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+
+bloco_while ::= WHILE L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+bloco_do_while ::= DO L_CHAVES instrucoes R_CHAVES WHILE L_PARENTESES expressoes R_PARENTESES PT_VIRGULA;
+
+// ------------------------------ Base ------------------------------
+literal ::= numero
+         | CARACTERE
+         | booleanos;
+
+numero ::= INTEIRO
+        | FLUTUANTE;
+
+tipo ::= TIPO_CHAR
+      | TIPO_FLUTUANTE
+      | TIPO_INTEIRO;
+
+termo ::= ID
+       | numero;
+
+operador ::= operador_logico
+          | operador_aritmetico
+          | operador_comparacao;
+
+operador_comparacao ::= MENOR
+                     | MAIOR
+                     | IGUAL_IGUAL
+                     | DIFERENTE
+                     | MENOR_IGUAL
+                     | MAIOR_IGUAL;
+
+operador_aritmetico ::= ADD
+                     | SUB
+                     | MUL
+                     | DIV;
+
+operador_logico ::= AND
+                 | OR;
+
+operador_atribuicao ::= IGUAL
+                     | ADD_IGUAL
+                     | SUB_IGUAL;
+
+booleanos ::= BOOL_TRUE
+           | BOOL_FALSE;

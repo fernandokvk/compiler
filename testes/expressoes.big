@@ -1,0 +1,27 @@
+program (boa_tarde):
+begin
+int big = 0;
+    if (big >= 10){
+        big = 1;
+    }
+    if (big and true){
+        big = 1;
+    }
+    if (big + 2 > big){
+        big = 1;
+    }
+    if (big - 3 > big * 2){
+        big = 1;
+    }
+    if (big and big){
+        big = 1;
+    }
+    if (big == big){
+        big = 1;
+    }
+    if (big > 10){
+        big = 100;
+    } else {
+        big = -200;
+    }
+end
