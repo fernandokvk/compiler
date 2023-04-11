@@ -3,7 +3,7 @@ package flex;
 import java_cup.runtime.Symbol;
 import java.io.IOException;
 import cup.sym;
-import misc.TokenInfo;
+import misc.TokenInfo;import org.apache.tools.ant.filters.ReplaceTokens;
 
 %%
 //Seção de opções e declarações (options and declarations)
@@ -50,6 +50,9 @@ Comentario = "#"[^\n]*
 "program"  { return new Symbol(sym.PRGRM_DEF, new TokenInfo(yyline, yycolumn, yytext())); }
 "begin"    { return new Symbol(sym.PRGRM_INI, new TokenInfo(yyline, yycolumn, yytext())); }
 "end"      { return new Symbol(sym.PRGRM_FIM, new TokenInfo(yyline, yycolumn, yytext())); }
+"function" { return new Symbol(sym.FUNCTION, new TokenInfo(yyline, yycolumn, yytext())); }
+"procedure" { return new Symbol(sym.PROCEDURE, new TokenInfo(yyline, yycolumn, yytext())); }
+"return"   { return new Symbol(sym.FUN_RETURN, new TokenInfo(yyline, yycolumn, yytext())); }
 
 ","        { return new Symbol(sym.VIRGULA, new TokenInfo(yyline, yycolumn, yytext())); }
 ":"        { return new Symbol(sym.DOIS_PONTOS, new TokenInfo(yyline, yycolumn, yytext())); }

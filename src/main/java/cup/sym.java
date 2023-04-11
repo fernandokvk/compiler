@@ -8,53 +8,59 @@ package cup;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int CARACTERE = 38;
-  public static final int PT_VIRGULA = 7;
-  public static final int R_PARENTESES = 9;
-  public static final int DIFERENTE = 15;
+  public static final int FUNCTION = 5;
+  public static final int CARACTERE = 41;
+  public static final int PT_VIRGULA = 10;
+  public static final int R_PARENTESES = 12;
+  public static final int DIFERENTE = 18;
   public static final int PRGRM_FIM = 3;
   public static final int PRGRM_INI = 2;
-  public static final int BOOL_TRUE = 39;
-  public static final int FOR = 33;
-  public static final int DOIS_PONTOS = 6;
-  public static final int VIRGULA = 5;
-  public static final int AND = 21;
-  public static final int IGUAL = 18;
-  public static final int TIPO_FLUTUANTE = 29;
-  public static final int OR = 22;
-  public static final int L_CHAVES = 10;
-  public static final int DIV = 26;
-  public static final int IF = 30;
-  public static final int ID = 37;
-  public static final int IGUAL_IGUAL = 14;
+  public static final int BOOL_TRUE = 42;
+  public static final int FOR = 36;
+  public static final int DOIS_PONTOS = 9;
+  public static final int VIRGULA = 8;
+  public static final int AND = 24;
+  public static final int IGUAL = 21;
+  public static final int TIPO_FLUTUANTE = 32;
+  public static final int OR = 25;
+  public static final int L_CHAVES = 13;
+  public static final int DIV = 29;
+  public static final int IF = 33;
+  public static final int ID = 40;
+  public static final int IGUAL_IGUAL = 17;
   public static final int EOF = 0;
-  public static final int SUB_IGUAL = 20;
-  public static final int MAIOR = 13;
-  public static final int ADD_IGUAL = 19;
+  public static final int SUB_IGUAL = 23;
+  public static final int MAIOR = 16;
+  public static final int ADD_IGUAL = 22;
   public static final int error = 1;
-  public static final int MUL = 25;
-  public static final int TIPO_CHAR = 27;
-  public static final int TIPO_INTEIRO = 28;
-  public static final int ADD = 23;
-  public static final int MENOR = 12;
-  public static final int FLUTUANTE = 36;
-  public static final int BOOL_FALSE = 40;
-  public static final int ELSE = 31;
-  public static final int INTEIRO = 35;
-  public static final int WHILE = 32;
+  public static final int MUL = 28;
+  public static final int TIPO_CHAR = 30;
+  public static final int TIPO_INTEIRO = 31;
+  public static final int ADD = 26;
+  public static final int FUN_RETURN = 6;
+  public static final int MENOR = 15;
+  public static final int FLUTUANTE = 39;
+  public static final int BOOL_FALSE = 43;
+  public static final int ELSE = 34;
+  public static final int INTEIRO = 38;
+  public static final int WHILE = 35;
   public static final int PRGRM_DEF = 4;
-  public static final int R_CHAVES = 11;
-  public static final int MENOR_IGUAL = 16;
-  public static final int L_PARENTESES = 8;
-  public static final int SUB = 24;
-  public static final int MAIOR_IGUAL = 17;
-  public static final int DO = 34;
+  public static final int R_CHAVES = 14;
+  public static final int MENOR_IGUAL = 19;
+  public static final int L_PARENTESES = 11;
+  public static final int SUB = 27;
+  public static final int MAIOR_IGUAL = 20;
+  public static final int PROCEDURE = 7;
+  public static final int DO = 37;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "PRGRM_INI",
   "PRGRM_FIM",
   "PRGRM_DEF",
+  "FUNCTION",
+  "FUN_RETURN",
+  "PROCEDURE",
   "VIRGULA",
   "DOIS_PONTOS",
   "PT_VIRGULA",

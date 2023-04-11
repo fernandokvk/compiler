@@ -9,7 +9,8 @@ public class Entry {
     public static void main(String[] args) throws IOException {
         String[] filenames = {
 //                "testes/expressoes.big",
-                "testes/declaracoes.big",
+                "testes/funcao.big",
+//                "testes/declaracoes.big",
 //                "testes/controle.big",
         };
         FileReader[] files = getFiles(filenames);

@@ -1,0 +1,18 @@
+program (declaracoes):
+begin
+    function foo(int a, int b, float c): int{
+        b = a * c;
+        return b;
+    }
+
+    int a = foo(10, 20, 30);
+    int b = foo(x, y, z);
+    int x = foo(x);
+    int z = foo(10);
+
+    procedure bar(int i){
+        int x = y;
+    }
+    bar(x);
+    bar(10);
+end

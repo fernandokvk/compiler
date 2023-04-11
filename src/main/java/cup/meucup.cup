@@ -57,6 +57,7 @@ In the default implementation it calls: report_error("Syntax error", null);.
 
 
 terminal PRGRM_INI, PRGRM_FIM, PRGRM_DEF;
+terminal FUNCTION, FUN_RETURN, PROCEDURE;
 terminal VIRGULA, DOIS_PONTOS, PT_VIRGULA;
 terminal L_PARENTESES, R_PARENTESES, L_CHAVES, R_CHAVES;
 terminal MENOR, MAIOR, IGUAL_IGUAL, DIFERENTE, MENOR_IGUAL, MAIOR_IGUAL;
@@ -73,6 +74,8 @@ nonterminal literal, termo;
 nonterminal instrucao_fluxo, instrucao_loop;
 nonterminal bloco_if, bloco_if_else;
 nonterminal bloco_for, bloco_while, bloco_do_while;
+nonterminal bloco_fun, parametros_lst, parametro, fun_chamada, argumentos_lst, argumento;
+nonterminal bloco_proc, proc_chamada;
 nonterminal instrucao_definicao, instrucao_inicializacao, instrucao_declaracao, instrucao_atribuicao;
 
 nonterminal numero, tipo, operador_comparacao, operador_aritmetico, operador_logico, booleanos;
@@ -99,13 +102,19 @@ expressao ::= termo operador_comparacao termo
            | ID operador_logico ID
            | termo
            | operador termo;
+
 // ------------------------------ Instruções ------------------------------
 instrucoes ::= instrucao
             | instrucao instrucoes;
+
 instrucao ::= instrucao_fluxo
            | instrucao_loop
            | instrucao_declaracao PT_VIRGULA
-           | instrucao_atribuicao PT_VIRGULA;
+           | instrucao_atribuicao PT_VIRGULA
+           | FUN_RETURN ID PT_VIRGULA
+           | bloco_fun
+           | bloco_proc
+           | proc_chamada PT_VIRGULA;
 
 instrucao_fluxo ::= bloco_if
                  | bloco_if_else;
@@ -117,13 +126,13 @@ instrucao_loop ::= bloco_for
 instrucao_declaracao ::= instrucao_definicao
                       | instrucao_inicializacao;
 //i = 0;
-instrucao_atribuicao ::= ID operador_atribuicao literal;
+instrucao_atribuicao ::= ID operador_atribuicao CARACTERE | ID operador_atribuicao booleanos | ID operador_atribuicao fun_chamada | ID operador_atribuicao expressoes;
 //int i;
 instrucao_definicao ::= tipo ID;
 //int i = 0;
-instrucao_inicializacao ::= tipo ID operador_atribuicao literal;
-// ------------------------------ Loops ------------------------------
+instrucao_inicializacao ::= tipo ID operador_atribuicao CARACTERE | tipo ID operador_atribuicao booleanos |tipo ID:id operador_atribuicao fun_chamada {:System.out.println(((TokenInfo)id).lexema);:}| tipo ID operador_atribuicao expressoes;
 
+// ------------------------------ Loops ------------------------------
 bloco_if ::= IF L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
 bloco_if_else ::= bloco_if ELSE L_CHAVES instrucoes R_CHAVES;
 
@@ -132,6 +141,19 @@ bloco_for ::= FOR L_PARENTESES ID VIRGULA expressoes VIRGULA instrucao_atribuica
 
 bloco_while ::= WHILE L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
 bloco_do_while ::= DO L_CHAVES instrucoes R_CHAVES WHILE L_PARENTESES expressoes R_PARENTESES PT_VIRGULA;
+
+// ------------------------------ Função ------------------------------
+bloco_fun ::= FUNCTION ID L_PARENTESES parametros_lst R_PARENTESES DOIS_PONTOS tipo L_CHAVES instrucoes R_CHAVES {:System.out.println("bloco_fun");:};
+fun_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
+
+parametros_lst ::= parametro | parametro VIRGULA parametros_lst;
+parametro ::= tipo ID;
+
+argumentos_lst ::= argumento | argumento VIRGULA argumentos_lst;
+argumento ::= ID | literal;
+
+bloco_proc ::= PROCEDURE ID L_PARENTESES parametros_lst R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+proc_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
 
 // ------------------------------ Base ------------------------------
 literal ::= numero
@@ -145,7 +167,7 @@ tipo ::= TIPO_CHAR
       | TIPO_FLUTUANTE
       | TIPO_INTEIRO;
 
-termo ::= ID
+termo ::= ID:id {:System.out.println(((TokenInfo)id).lexema);:}
        | numero;
 
 operador ::= operador_logico
