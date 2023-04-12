@@ -2,7 +2,7 @@ package ast;
 
 import misc.TokenInfo;
 
-public class OperadorAritmeticoNode extends  OperadorNode{
+public class OperadorAritmeticoNode extends  ASTNode{
     public TokenInfo tokenInfo;
 
     public OperadorAritmeticoNode(TokenInfo tokenInfo) {

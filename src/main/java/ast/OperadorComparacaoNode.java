@@ -2,7 +2,7 @@ package ast;
 
 import misc.TokenInfo;
 
-public class OperadorComparacaoNode extends  OperadorNode{
+public class OperadorComparacaoNode extends  ASTNode{
     public TokenInfo tokenInfo;
 
 

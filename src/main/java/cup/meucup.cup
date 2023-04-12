@@ -87,7 +87,6 @@ nonterminal DeclaracaoNode declaracao;
 nonterminal TipoNode tipo;
 nonterminal VarNode var;
 nonterminal LiteralNode literal;
-nonterminal OperadorNode operador;
 nonterminal OperadorLogicoNode operador_logico;
 nonterminal OperadorAritmeticoNode operador_aritmetico;
 nonterminal OperadorComparacaoNode operador_comparacao;
@@ -213,7 +212,7 @@ expressoes ::= expressao:exp
                 ExpressoesNode expressoesNode = new ExpressoesNode(exp);
                 RESULT = expressoesNode;
             :}
-            | expressao:exp operador:op expressoes:exprs
+            | expressao:exp operador_aritmetico:op expressoes:exprs
             {:
                 if (exprs != null){
                 exprs.expressoes.push(exp);
@@ -249,10 +248,6 @@ literal ::= INTEIRO:x {: RESULT = new LiteralNode(x); :}
 inicializacao ::= tipo:tipo ID:id IGUAL expressoes:exprs {: RESULT = new InicializacaoNode(tipo, id, exprs);:};
 atribuicao ::= ID:id operador_atribuicao:op expressoes:expr {: RESULT = new AtribuicaoNode(id, op, expr); :};
 declaracao ::= tipo:tipo ID:id {: RESULT = new DeclaracaoNode(tipo, id);:};
-
-operador ::= operador_logico:x {: RESULT = x;:}
-          | operador_aritmetico:x {: RESULT = x;:}
-          | operador_comparacao:x {: RESULT = x;:};
 
 operador_logico ::= AND:x               {: RESULT = new OperadorLogicoNode(x); :}
                  | OR:x                 {: RESULT = new OperadorLogicoNode(x); :};
