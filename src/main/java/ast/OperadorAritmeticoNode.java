@@ -8,4 +8,9 @@ public class OperadorAritmeticoNode extends  OperadorNode{
     public OperadorAritmeticoNode(TokenInfo tokenInfo) {
         this.tokenInfo = tokenInfo;
     }
+
+    @Override
+    public String toString() {
+        return tokenInfo.lexema;
+    }
 }
