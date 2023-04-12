@@ -1,0 +1,4 @@
+program (mini):
+begin{
+    int x = 2 + b + c;
+}end

@@ -3,6 +3,7 @@ import java_cup.runtime.*;
 import java.io.*;
 import java.util.*;
 import misc.TokenInfo;
+import ast.*;
 
 parser code {:
 //Comentários abaixo obtidos do manual (https://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html)
@@ -56,30 +57,43 @@ In the default implementation it calls: report_error("Syntax error", null);.
 :};
 
 
-terminal PRGRM_INI, PRGRM_FIM, PRGRM_DEF;
-terminal FUNCTION, FUN_RETURN, PROCEDURE;
-terminal VIRGULA, DOIS_PONTOS, PT_VIRGULA;
-terminal L_PARENTESES, R_PARENTESES, L_CHAVES, R_CHAVES;
-terminal MENOR, MAIOR, IGUAL_IGUAL, DIFERENTE, MENOR_IGUAL, MAIOR_IGUAL;
-terminal IGUAL, ADD_IGUAL, SUB_IGUAL;
-terminal AND, OR;
-terminal ADD, SUB, MUL, DIV;
-terminal TIPO_CHAR, TIPO_INTEIRO, TIPO_FLUTUANTE;
-terminal IF, ELSE, WHILE, FOR, DO;
-terminal INTEIRO, FLUTUANTE, ID, CARACTERE;
-terminal BOOL_TRUE, BOOL_FALSE;
+terminal TokenInfo BEGIN, END, PROGRAMA;
+terminal TokenInfo FUNCTION, RETURN, PROCEDURE, PROC;
+terminal TokenInfo VIRGULA, DOIS_PONTOS, PT_VIRGULA;
+terminal TokenInfo L_PARENTESES, R_PARENTESES, L_CHAVES, R_CHAVES;
+terminal TokenInfo MENOR, MAIOR, IGUAL_IGUAL, DIFERENTE, MENOR_IGUAL, MAIOR_IGUAL;
+terminal TokenInfo IGUAL, ADD_IGUAL, SUB_IGUAL;
+terminal TokenInfo AND, OR;
+terminal TokenInfo ADD, SUB, MUL, DIV;
+terminal TokenInfo TIPO_CHAR, TIPO_INTEIRO, TIPO_FLUTUANTE, TIPO_BOOLEAN;
+terminal TokenInfo IF, ELSE, WHILE, FOR, DO;
+terminal TokenInfo INTEIRO, FLUTUANTE, ID, CARACTERE;
+terminal TokenInfo BOOL_TRUE, BOOL_FALSE;
 
-nonterminal programa, init_programa, instrucoes, instrucao;
-nonterminal literal, termo;
-nonterminal instrucao_fluxo, instrucao_loop;
-nonterminal bloco_if, bloco_if_else;
-nonterminal bloco_for, bloco_while, bloco_do_while;
-nonterminal bloco_fun, parametros_lst, parametro, fun_chamada, argumentos_lst, argumento;
-nonterminal bloco_proc, proc_chamada;
-nonterminal instrucao_definicao, instrucao_inicializacao, instrucao_declaracao, instrucao_atribuicao;
+nonterminal InitProgramaNode init_programa;
+nonterminal ProgramaNode programa;
+nonterminal BlocoNode bloco;
+nonterminal InstrucoesNode instrucoes;
+nonterminal InstrucaoNode instrucao;
+nonterminal CondicoesNode condicoes;
+nonterminal ExpressoesNode expressoes;
+nonterminal ExpressaoNode expressao;
+nonterminal ArgumentosNode argumentos;
+nonterminal ParametrosNode parametros;
+nonterminal ParametroNode parametro;
+nonterminal InicializacaoNode inicializacao;
+nonterminal AtribuicaoNode atribuicao;
+nonterminal DeclaracaoNode declaracao;
+nonterminal TipoNode tipo;
+nonterminal VarNode var;
+nonterminal VarForNode var_for;
+nonterminal LiteralNode literal;
+nonterminal OperadorNode operador;
+nonterminal OperadorLogicoNode operador_logico;
+nonterminal OperadorAritmeticoNode operador_aritmetico;
+nonterminal OperadorComparacaoNode operador_comparacao;
+nonterminal OperadorAtribuicaoNode operador_atribuicao;
 
-nonterminal numero, tipo, operador_comparacao, operador_aritmetico, operador_logico, booleanos;
-nonterminal expressoes, expressao, operador, operador_atribuicao;
 
 precedence left IGUAL, ADD_IGUAL, SUB_IGUAL;
 precedence left OR;
@@ -90,108 +104,95 @@ precedence left MUL, DIV;
 
 start with programa;
 
-init_programa ::= PRGRM_DEF L_PARENTESES ID R_PARENTESES DOIS_PONTOS {:/*blbalbal */:};
-programa ::= init_programa PRGRM_INI PRGRM_FIM | init_programa PRGRM_INI instrucoes PRGRM_FIM;
 
-// ------------------------------ Expressões ------------------------------
-expressoes ::= expressao | expressao operador expressoes;
-expressao ::= termo operador_comparacao termo
-           |  termo operador_aritmetico termo
-           | ID operador_logico booleanos
-           | booleanos operador_logico ID
-           | ID operador_logico ID
-           | termo
-           | operador termo;
+init_programa ::= PROGRAMA L_PARENTESES ID:id R_PARENTESES DOIS_PONTOS {: RESULT = new InitProgramaNode(id);:};
 
-// ------------------------------ Instruções ------------------------------
-instrucoes ::= instrucao
-            | instrucao instrucoes;
+programa ::= init_programa:ini BEGIN bloco:bloco END {: RESULT = new ProgramaNode(ini, bloco);:};
 
-instrucao ::= instrucao_fluxo
-           | instrucao_loop
-           | instrucao_declaracao PT_VIRGULA
-           | instrucao_atribuicao PT_VIRGULA
-           | FUN_RETURN ID PT_VIRGULA
-           | bloco_fun
-           | bloco_proc
-           | proc_chamada PT_VIRGULA;
+bloco ::= L_CHAVES instrucoes:instrs R_CHAVES
+        {:
+            RESULT = new BlocoNode((InstrucoesNode)instrs);
+        :};
 
-instrucao_fluxo ::= bloco_if
-                 | bloco_if_else;
 
-instrucao_loop ::= bloco_for
-                | bloco_while
-                | bloco_do_while;
+instrucoes ::= instrucao:instr
+            {:
+                InstrucoesNode instructions = new InstrucoesNode();
+                instructions.addInstrucao((InstrucaoNode)instr);
+                RESULT = instructions;
+            :}
+            | instrucao:instr instrucoes:instrs
+            {:
+                InstrucoesNode instructions = new InstrucoesNode();
+                instructions.addInstrucao((InstrucaoNode)instr);
+                instructions.addAllInstrucoes(((InstrucoesNode)instrs).instrucoes);
+                RESULT = instructions;
+            :};
 
-instrucao_declaracao ::= instrucao_definicao
-                      | instrucao_inicializacao;
-//i = 0;
-instrucao_atribuicao ::= ID operador_atribuicao CARACTERE | ID operador_atribuicao booleanos | ID operador_atribuicao fun_chamada | ID operador_atribuicao expressoes;
-//int i;
-instrucao_definicao ::= tipo ID;
-//int i = 0;
-instrucao_inicializacao ::= tipo ID operador_atribuicao CARACTERE | tipo ID operador_atribuicao booleanos |tipo ID:id operador_atribuicao fun_chamada {:System.out.println(((TokenInfo)id).lexema);:}| tipo ID operador_atribuicao expressoes;
+instrucao ::= FOR L_PARENTESES var_for VIRGULA condicoes VIRGULA atribuicao R_PARENTESES bloco
+           |  WHILE L_PARENTESES condicoes R_PARENTESES bloco
+           |  DO bloco WHILE L_PARENTESES condicoes R_PARENTESES PT_VIRGULA
+           |  IF L_PARENTESES condicoes R_PARENTESES bloco
+           |  IF L_PARENTESES condicoes R_PARENTESES bloco ELSE bloco
+           |  FUNCTION ID L_PARENTESES parametros R_PARENTESES DOIS_PONTOS tipo L_CHAVES instrucoes RETURN var PT_VIRGULA R_CHAVES
+           |  PROCEDURE ID L_PARENTESES parametros R_PARENTESES bloco
+           |  PROC ID L_PARENTESES argumentos R_PARENTESES PT_VIRGULA
+           |  inicializacao:x PT_VIRGULA {: :}
+           |  atribuicao PT_VIRGULA
+           |  declaracao:decl PT_VIRGULA {:RESULT = decl;:}
+           ;
 
-// ------------------------------ Loops ------------------------------
-bloco_if ::= IF L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
-bloco_if_else ::= bloco_if ELSE L_CHAVES instrucoes R_CHAVES;
+condicoes ::= expressao | expressao operador_logico condicoes | expressao operador_comparacao condicoes;
 
-bloco_for ::= FOR L_PARENTESES ID VIRGULA expressoes VIRGULA instrucao_atribuicao R_PARENTESES L_CHAVES instrucoes R_CHAVES
-           | FOR L_PARENTESES instrucao_inicializacao VIRGULA expressoes VIRGULA instrucao_atribuicao R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+parametros ::= parametro | parametro VIRGULA parametros | /* vazio */;
 
-bloco_while ::= WHILE L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
-bloco_do_while ::= DO L_CHAVES instrucoes R_CHAVES WHILE L_PARENTESES expressoes R_PARENTESES PT_VIRGULA;
-
-// ------------------------------ Função ------------------------------
-bloco_fun ::= FUNCTION ID L_PARENTESES parametros_lst R_PARENTESES DOIS_PONTOS tipo L_CHAVES instrucoes R_CHAVES {:System.out.println("bloco_fun");:};
-fun_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
-
-parametros_lst ::= parametro | parametro VIRGULA parametros_lst;
 parametro ::= tipo ID;
 
-argumentos_lst ::= argumento | argumento VIRGULA argumentos_lst;
-argumento ::= ID | literal;
+argumentos ::= expressao | expressao VIRGULA argumentos | /* vazio */;
 
-bloco_proc ::= PROCEDURE ID L_PARENTESES parametros_lst R_PARENTESES L_CHAVES instrucoes R_CHAVES;
-proc_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
+expressoes ::= expressao | expressao operador expressoes;
 
-// ------------------------------ Base ------------------------------
-literal ::= numero
-         | CARACTERE
-         | booleanos;
+expressao ::= var
+           |  ID L_PARENTESES argumentos R_PARENTESES
+           |  var operador_aritmetico var;
 
-numero ::= INTEIRO
-        | FLUTUANTE;
+var ::= ID:id {: RESULT = new VarNode(id);:} | literal:lit {: RESULT = new VarNode(lit); :};
 
-tipo ::= TIPO_CHAR
-      | TIPO_FLUTUANTE
-      | TIPO_INTEIRO;
+literal ::= INTEIRO:x {: RESULT = new LiteralNode(x); :}
+         | FLUTUANTE:x {: RESULT = new LiteralNode(x); :}
+         | CARACTERE:x {: RESULT = new LiteralNode(x); :}
+         | BOOL_TRUE:x {: RESULT = new LiteralNode(x); :}
+         | BOOL_FALSE:x {: RESULT = new LiteralNode(x); :};
 
-termo ::= ID:id {:System.out.println(((TokenInfo)id).lexema);:}
-       | numero;
+
+var_for ::= inicializacao
+         |  atribuicao
+         |  ID;
+
+inicializacao ::= tipo ID IGUAL expressoes;
+atribuicao ::= ID:id operador_atribuicao:op expressoes:expr {: RESULT = new AtribuicaoNode(id, op, expr); :};
+declaracao ::= tipo:tipo ID:id {: RESULT = new DeclaracaoNode(tipo, id);:};
 
 operador ::= operador_logico
           | operador_aritmetico
           | operador_comparacao;
 
+operador_logico ::= AND | OR;
 operador_comparacao ::= MENOR
                      | MAIOR
                      | IGUAL_IGUAL
                      | DIFERENTE
                      | MENOR_IGUAL
                      | MAIOR_IGUAL;
-
 operador_aritmetico ::= ADD
                      | SUB
                      | MUL
                      | DIV;
-
-operador_logico ::= AND
-                 | OR;
-
 operador_atribuicao ::= IGUAL
-                     | ADD_IGUAL
-                     | SUB_IGUAL;
+                  | ADD_IGUAL
+                  | SUB_IGUAL;
 
-booleanos ::= BOOL_TRUE
-           | BOOL_FALSE;
+tipo ::= TIPO_CHAR:x {: :}
+    | TIPO_FLUTUANTE:x{: :}
+    | TIPO_INTEIRO:x{: :}
+    | TIPO_BOOLEAN:x{: :};

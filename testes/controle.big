@@ -1,5 +1,5 @@
 program (controle):
-begin
+begin{
     int i = 0;
     int n = 20;
     for (i, i < n, i += 1){
@@ -12,4 +12,4 @@ begin
         int i = 0;
         i += 20;
     } while (i <= 200);
-end
+}end

@@ -47,13 +47,12 @@ Comentario = "#"[^\n]*
 
 %%
 //Seção de regras (lexical rules)
-"program"  { return new Symbol(sym.PROGRAMA, new TokenInfo(yyline, yycolumn, yytext(), sym.PROGRAMA)); }
-"begin"    { return new Symbol(sym.BEGIN, new TokenInfo(yyline, yycolumn, yytext(), sym.BEGIN)); }
-"end"      { return new Symbol(sym.END, new TokenInfo(yyline, yycolumn, yytext(), sym.END)); }
+"program"  { return new Symbol(sym.PRGRM_DEF, new TokenInfo(yyline, yycolumn, yytext(), sym.PRGRM_DEF)); }
+"begin"    { return new Symbol(sym.PRGRM_INI, new TokenInfo(yyline, yycolumn, yytext(), sym.PRGRM_INI)); }
+"end"      { return new Symbol(sym.PRGRM_FIM, new TokenInfo(yyline, yycolumn, yytext(), sym.PRGRM_FIM)); }
 "function" { return new Symbol(sym.FUNCTION, new TokenInfo(yyline, yycolumn, yytext(), sym.FUNCTION)); }
 "procedure" { return new Symbol(sym.PROCEDURE, new TokenInfo(yyline, yycolumn, yytext(), sym.PROCEDURE)); }
-"proc"     { return new Symbol(sym.PROC, new TokenInfo(yyline, yycolumn, yytext(), sym.PROC)); }
-"return"   { return new Symbol(sym.RETURN, new TokenInfo(yyline, yycolumn, yytext(), sym.RETURN)); }
+"return"   { return new Symbol(sym.FUN_RETURN, new TokenInfo(yyline, yycolumn, yytext(), sym.FUN_RETURN)); }
 
 ","        { return new Symbol(sym.VIRGULA, new TokenInfo(yyline, yycolumn, yytext(), sym.VIRGULA)); }
 ":"        { return new Symbol(sym.DOIS_PONTOS, new TokenInfo(yyline, yycolumn, yytext(), sym.DOIS_PONTOS)); }
@@ -81,8 +80,6 @@ Comentario = "#"[^\n]*
 "char"     { return new Symbol(sym.TIPO_CHAR, new TokenInfo(yyline, yycolumn, yytext(), sym.TIPO_CHAR)); }
 "int"      { return new Symbol(sym.TIPO_INTEIRO, new TokenInfo(yyline, yycolumn, yytext(), sym.TIPO_INTEIRO)); }
 "float"    { return new Symbol(sym.TIPO_FLUTUANTE, new TokenInfo(yyline, yycolumn, yytext(), sym.TIPO_FLUTUANTE)); }
-"boolean"    { return new Symbol(sym.TIPO_BOOLEAN, new TokenInfo(yyline, yycolumn, yytext(), sym.TIPO_BOOLEAN)); }
-
 
 "and"    { return new Symbol(sym.AND, new TokenInfo(yyline, yycolumn, yytext(), sym.AND)); }
 "or"     { return new Symbol(sym.OR, new TokenInfo(yyline, yycolumn, yytext(), sym.OR)); }

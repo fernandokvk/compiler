@@ -1,0 +1,212 @@
+package cup;
+import java_cup.runtime.*;
+import java.io.*;
+import java.util.*;
+import misc.TokenInfo;
+import nos.*;
+import ast.*;
+
+parser code {:
+//Comentários abaixo obtidos do manual (https://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html)
+/*
+This method should be called whenever an error message is to be issued.
+In the default implementation of this method, the first parameter provides the text of a
+message which is printed on System.err and the second parameter is simply ignored.
+It is very typical to override this method in order to provide a more sophisticated error reporting mechanism.
+*/
+
+    public void report_error(String message, Object info) {
+            if (info instanceof Symbol) {
+                Symbol symbol = (Symbol) info;
+                TokenInfo tokenInfo = symbol.value instanceof TokenInfo ? (TokenInfo) symbol.value : null;
+
+                if (tokenInfo != null) {
+                    int linha = tokenInfo.linha;
+                    int coluna = tokenInfo.coluna;
+                    String lexema = tokenInfo.lexema;
+                    System.err.println("Erro sintatico - linha: " + (linha + 1) + ", coluna " + (coluna + 1) + ", lexema: '"+ lexema +"' - " + message);
+                } else {
+                    System.err.println("Erro sintatico: " + message);
+                }
+            } else {
+                System.err.println("Erro sintatico: " + message);
+            }
+        }
+/*
+This method should be called whenever a non-recoverable error occurs.
+It responds by calling report_error(), then aborts parsing by calling the parser method done_parsing(),
+and finally throws an exception. (In general done_parsing() should be called at any point that parsing needs to be terminated early).
+*/
+    public void report_fatal_error(String message, Object info) {
+        report_error("Erro fatal: " + message, info);
+        System.exit(1);
+    }
+/*
+This method is called by the parser if it is unable to recover from a syntax error.
+In the default implementation it calls: report_fatal_error("Couldn't repair and continue parse", null);.
+*/
+    public void unrecovered_syntax_error(Symbol cur_token) {
+        report_fatal_error("O analisador lexico falhou e nao se recuperou", cur_token);
+    }
+/*
+This method is called by the parser as soon as a syntax error is detected (but before error recovery is attempted).
+In the default implementation it calls: report_error("Syntax error", null);.
+*/
+        public void syntax_error(Symbol cur_token){
+            report_error("Erro sintatico", cur_token);
+        }
+:};
+
+
+terminal TokenInfo PRGRM_INI, PRGRM_FIM, PRGRM_DEF;
+terminal TokenInfo FUNCTION, FUN_RETURN, PROCEDURE;
+terminal TokenInfo VIRGULA, DOIS_PONTOS, PT_VIRGULA;
+terminal TokenInfo L_PARENTESES, R_PARENTESES, L_CHAVES, R_CHAVES;
+terminal TokenInfo MENOR, MAIOR, IGUAL_IGUAL, DIFERENTE, MENOR_IGUAL, MAIOR_IGUAL;
+terminal TokenInfo IGUAL, ADD_IGUAL, SUB_IGUAL;
+terminal TokenInfo AND, OR;
+terminal TokenInfo ADD, SUB, MUL, DIV;
+terminal TokenInfo TIPO_CHAR, TIPO_INTEIRO, TIPO_FLUTUANTE;
+terminal TokenInfo IF, ELSE, WHILE, FOR, DO;
+terminal TokenInfo INTEIRO, FLUTUANTE, ID, CARACTERE;
+terminal TokenInfo BOOL_TRUE, BOOL_FALSE;
+
+nonterminal astNo programa, init_programa, instrucoes, instrucao;
+nonterminal astNo literal, termo;
+nonterminal astNo instrucao_fluxo, instrucao_loop;
+nonterminal astNo bloco_if, bloco_if_else;
+nonterminal astNo bloco_for, bloco_while, bloco_do_while;
+nonterminal astNo bloco_fun, parametros_lst, parametro, fun_chamada, argumentos_lst, argumento;
+nonterminal astNo bloco_proc, proc_chamada;
+nonterminal astNo instrucao_definicao, instrucao_inicializacao, instrucao_declaracao, instrucao_atribuicao;
+nonterminal astNo numero, tipo, operador_comparacao, operador_aritmetico, operador_logico, booleanos;
+nonterminal astNo expressoes, expressao, operador, operador_atribuicao;
+
+precedence left IGUAL, ADD_IGUAL, SUB_IGUAL;
+precedence left OR;
+precedence left AND;
+precedence left IGUAL_IGUAL, DIFERENTE, MENOR, MAIOR, MENOR_IGUAL, MAIOR_IGUAL;
+precedence left ADD, SUB;
+precedence left MUL, DIV;
+
+start with programa;
+
+init_programa ::= PRGRM_DEF L_PARENTESES ID R_PARENTESES DOIS_PONTOS {:/*blbalbal */:};
+programa ::= init_programa PRGRM_INI PRGRM_FIM | init_programa PRGRM_INI instrucoes PRGRM_FIM;
+
+// ------------------------------ Expressões ------------------------------
+expressoes ::= expressao | expressao operador expressoes;
+
+expressao ::= termo operador_comparacao termo
+           |  termo operador_aritmetico termo
+           | ID operador_logico booleanos
+           | booleanos operador_logico ID
+           | ID operador_logico ID
+           | termo
+           | operador termo;
+
+// ------------------------------ Instruções ------------------------------
+instrucoes ::= instrucao
+            | instrucao instrucoes;
+
+instrucao ::= instrucao_fluxo
+           | instrucao_loop
+           | instrucao_declaracao PT_VIRGULA
+           | instrucao_atribuicao PT_VIRGULA
+           | FUN_RETURN ID PT_VIRGULA
+           | bloco_fun
+           | bloco_proc
+           | proc_chamada PT_VIRGULA;
+
+instrucao_fluxo ::= bloco_if
+                 | bloco_if_else;
+
+instrucao_loop ::= bloco_for
+                | bloco_while
+                | bloco_do_while;
+
+instrucao_declaracao ::= instrucao_definicao
+                      | instrucao_inicializacao;
+//i = 0;
+instrucao_atribuicao ::= ID operador_atribuicao CARACTERE
+                      | ID operador_atribuicao booleanos
+                      | ID operador_atribuicao fun_chamada
+                      | ID operador_atribuicao expressoes;
+//int i;
+instrucao_definicao ::= tipo ID;
+//int i = 0;
+instrucao_inicializacao ::= tipo ID operador_atribuicao CARACTERE
+                        | tipo ID operador_atribuicao booleanos
+                        | tipo ID:id operador_atribuicao fun_chamada {::}
+                        | tipo:tp ID:id operador_atribuicao:op expressoes:expr {::};
+
+// ------------------------------ Loops ------------------------------
+bloco_if ::= IF L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+bloco_if_else ::= bloco_if ELSE L_CHAVES instrucoes R_CHAVES;
+
+bloco_for ::= FOR L_PARENTESES ID VIRGULA expressoes VIRGULA instrucao_atribuicao R_PARENTESES L_CHAVES instrucoes R_CHAVES
+           | FOR L_PARENTESES instrucao_inicializacao VIRGULA expressoes VIRGULA instrucao_atribuicao R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+
+bloco_while ::= WHILE L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+bloco_do_while ::= DO L_CHAVES instrucoes R_CHAVES WHILE L_PARENTESES expressoes R_PARENTESES PT_VIRGULA;
+
+// ------------------------------ Função ------------------------------
+bloco_fun ::= FUNCTION ID L_PARENTESES parametros_lst R_PARENTESES DOIS_PONTOS tipo L_CHAVES instrucoes R_CHAVES {:System.out.println("bloco_fun");:};
+
+fun_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
+
+parametros_lst ::= parametro
+                | parametro VIRGULA parametros_lst;
+
+parametro ::= tipo ID;
+
+argumentos_lst ::= argumento
+                | argumento VIRGULA argumentos_lst;
+
+argumento ::= ID
+           | literal;
+
+bloco_proc ::= PROCEDURE ID L_PARENTESES parametros_lst R_PARENTESES L_CHAVES instrucoes R_CHAVES;
+
+proc_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
+
+// ------------------------------ Base ------------------------------
+literal ::= numero
+         | CARACTERE
+         | booleanos;
+
+numero ::= INTEIRO
+        | FLUTUANTE;
+
+tipo ::= TIPO_CHAR
+      | TIPO_FLUTUANTE
+      | TIPO_INTEIRO:ti {: RESULT = new NoTipo(ti);:};
+
+termo ::= ID:id {: :}
+       | numero;
+
+operador ::= operador_logico
+          | operador_aritmetico
+          | operador_comparacao;
+
+operador_comparacao ::= MENOR
+                     | MAIOR
+                     | IGUAL_IGUAL
+                     | DIFERENTE
+                     | MENOR_IGUAL
+                     | MAIOR_IGUAL;
+
+operador_aritmetico ::= ADD
+                     | SUB
+                     | MUL
+                     | DIV;
+
+operador_logico ::= AND
+                 | OR;
+
+operador_atribuicao ::= IGUAL
+                     | ADD_IGUAL
+                     | SUB_IGUAL;
+
+booleanos ::= BOOL_TRUE
+           | BOOL_FALSE;

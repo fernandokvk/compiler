@@ -1,5 +1,5 @@
 program (boa_tarde):
-begin
+begin{
 int big = 0;
     if (big >= 10){
         big = 1;
@@ -24,4 +24,4 @@ int big = 0;
     } else {
         big = -200;
     }
-end
+}end

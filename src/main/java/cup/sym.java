@@ -9,58 +9,61 @@ package cup;
 public class sym {
   /* terminals */
   public static final int FUNCTION = 5;
-  public static final int CARACTERE = 41;
-  public static final int PT_VIRGULA = 10;
-  public static final int R_PARENTESES = 12;
-  public static final int DIFERENTE = 18;
-  public static final int PRGRM_FIM = 3;
-  public static final int PRGRM_INI = 2;
-  public static final int BOOL_TRUE = 42;
-  public static final int FOR = 36;
-  public static final int DOIS_PONTOS = 9;
-  public static final int VIRGULA = 8;
-  public static final int AND = 24;
-  public static final int IGUAL = 21;
-  public static final int TIPO_FLUTUANTE = 32;
-  public static final int OR = 25;
-  public static final int L_CHAVES = 13;
-  public static final int DIV = 29;
-  public static final int IF = 33;
-  public static final int ID = 40;
-  public static final int IGUAL_IGUAL = 17;
+  public static final int CARACTERE = 43;
+  public static final int PT_VIRGULA = 11;
+  public static final int PROGRAMA = 4;
+  public static final int R_PARENTESES = 13;
+  public static final int DIFERENTE = 19;
+  public static final int BOOL_TRUE = 44;
+  public static final int FOR = 38;
+  public static final int DOIS_PONTOS = 10;
+  public static final int VIRGULA = 9;
+  public static final int AND = 25;
+  public static final int IGUAL = 22;
+  public static final int TIPO_BOOLEAN = 34;
+  public static final int TIPO_FLUTUANTE = 33;
+  public static final int OR = 26;
+  public static final int L_CHAVES = 14;
+  public static final int DIV = 30;
+  public static final int BEGIN = 2;
+  public static final int IF = 35;
+  public static final int ID = 42;
+  public static final int IGUAL_IGUAL = 18;
   public static final int EOF = 0;
-  public static final int SUB_IGUAL = 23;
-  public static final int MAIOR = 16;
-  public static final int ADD_IGUAL = 22;
+  public static final int RETURN = 6;
+  public static final int SUB_IGUAL = 24;
+  public static final int MAIOR = 17;
+  public static final int ADD_IGUAL = 23;
   public static final int error = 1;
-  public static final int MUL = 28;
-  public static final int TIPO_CHAR = 30;
-  public static final int TIPO_INTEIRO = 31;
-  public static final int ADD = 26;
-  public static final int FUN_RETURN = 6;
-  public static final int MENOR = 15;
-  public static final int FLUTUANTE = 39;
-  public static final int BOOL_FALSE = 43;
-  public static final int ELSE = 34;
-  public static final int INTEIRO = 38;
-  public static final int WHILE = 35;
-  public static final int PRGRM_DEF = 4;
-  public static final int R_CHAVES = 14;
-  public static final int MENOR_IGUAL = 19;
-  public static final int L_PARENTESES = 11;
-  public static final int SUB = 27;
-  public static final int MAIOR_IGUAL = 20;
+  public static final int MUL = 29;
+  public static final int TIPO_CHAR = 31;
+  public static final int TIPO_INTEIRO = 32;
+  public static final int ADD = 27;
+  public static final int MENOR = 16;
+  public static final int FLUTUANTE = 41;
+  public static final int BOOL_FALSE = 45;
+  public static final int ELSE = 36;
+  public static final int INTEIRO = 40;
+  public static final int WHILE = 37;
+  public static final int END = 3;
+  public static final int R_CHAVES = 15;
+  public static final int PROC = 8;
+  public static final int MENOR_IGUAL = 20;
+  public static final int L_PARENTESES = 12;
+  public static final int SUB = 28;
+  public static final int MAIOR_IGUAL = 21;
   public static final int PROCEDURE = 7;
-  public static final int DO = 37;
+  public static final int DO = 39;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "PRGRM_INI",
-  "PRGRM_FIM",
-  "PRGRM_DEF",
+  "BEGIN",
+  "END",
+  "PROGRAMA",
   "FUNCTION",
-  "FUN_RETURN",
+  "RETURN",
   "PROCEDURE",
+  "PROC",
   "VIRGULA",
   "DOIS_PONTOS",
   "PT_VIRGULA",
@@ -86,6 +89,7 @@ public class sym {
   "TIPO_CHAR",
   "TIPO_INTEIRO",
   "TIPO_FLUTUANTE",
+  "TIPO_BOOLEAN",
   "IF",
   "ELSE",
   "WHILE",

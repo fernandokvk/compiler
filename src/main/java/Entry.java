@@ -9,12 +9,20 @@ public class Entry {
     public static void main(String[] args) throws IOException {
         String[] filenames = {
 //                "testes/expressoes.big",
-                "testes/funcao.big",
+//                "testes/funcao.big",
+                "testes/mini.big",
 //                "testes/declaracoes.big",
 //                "testes/controle.big",
         };
         FileReader[] files = getFiles(filenames);
         runLexer(filenames, files);
+        /*
+         Definicao
+            Inicializacao -> int i = 0;
+            Declaracao -> int i;
+        Atribuicao -> i = 0;
+        Uso -> i;
+         */
     }
 
     private static void runLexer(String[] filenames, FileReader[] files) throws IOException {
@@ -23,11 +31,11 @@ public class Entry {
         int i = 0;
         for (FileReader f : files) {
             lexer = new Lexer(f);
-            System.out.println("\nArquivo: " + filenames[i]);
+            System.out.println("\nArquivo:\t" + filenames[i]);
             try {
                 parser parser = new parser(lexer);
                 parser.parse();
-                System.out.println("Fim " + filenames[i]);
+                System.out.println("Fim:\t\t" + filenames[i]);
             } catch (Lexer.ErroLexico e) {
                 System.err.println(e.getMessage());
             } catch (Exception e) {
