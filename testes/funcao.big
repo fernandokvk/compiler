@@ -2,12 +2,10 @@ program (funcao):
 begin{
     function foo(int a, int b, float c): int{
         b = a * c;
-        return b;
-    }
+    } return b;
     function foo(): int{
         a = b;
-        return b;
-    }
+    } return b;
 
     int a = foo(10, 20, 30);
     int b = foo(x, y, z);

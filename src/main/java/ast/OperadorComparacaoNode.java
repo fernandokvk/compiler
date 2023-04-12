@@ -1,4 +1,12 @@
 package ast;
 
-public class OperadorComparacaoNode extends  ASTNode{
+import misc.TokenInfo;
+
+public class OperadorComparacaoNode extends  OperadorNode{
+    public TokenInfo tokenInfo;
+
+
+    public OperadorComparacaoNode(TokenInfo tokenInfo) {
+        this.tokenInfo = tokenInfo;
+    }
 }

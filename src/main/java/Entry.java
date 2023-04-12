@@ -1,3 +1,5 @@
+import ast.ASTNode;
+import ast.ProgramaNode;
 import flex.*;
 import cup.*;
 
@@ -34,7 +36,8 @@ public class Entry {
             System.out.println("\nArquivo:\t" + filenames[i]);
             try {
                 parser parser = new parser(lexer);
-                parser.parse();
+                ProgramaNode raiz = (ProgramaNode) parser.parse().value;
+
                 System.out.println("Fim:\t\t" + filenames[i]);
             } catch (Lexer.ErroLexico e) {
                 System.err.println(e.getMessage());

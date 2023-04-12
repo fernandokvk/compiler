@@ -2,7 +2,7 @@ package ast;
 
 import misc.TokenInfo;
 
-public class AtribuicaoNode extends ASTNode{
+public class AtribuicaoNode extends InstrucaoNode{
     public TokenInfo id;
     public OperadorAtribuicaoNode operador;
     public ExpressoesNode expressoesNode;

@@ -86,7 +86,6 @@ nonterminal AtribuicaoNode atribuicao;
 nonterminal DeclaracaoNode declaracao;
 nonterminal TipoNode tipo;
 nonterminal VarNode var;
-nonterminal VarForNode var_for;
 nonterminal LiteralNode literal;
 nonterminal OperadorNode operador;
 nonterminal OperadorLogicoNode operador_logico;
@@ -109,54 +108,136 @@ init_programa ::= PROGRAMA L_PARENTESES ID:id R_PARENTESES DOIS_PONTOS {: RESULT
 
 programa ::= init_programa:ini BEGIN bloco:bloco END {: RESULT = new ProgramaNode(ini, bloco);:};
 
-bloco ::= L_CHAVES instrucoes:instrs R_CHAVES
-        {:
-            RESULT = new BlocoNode((InstrucoesNode)instrs);
-        :};
+bloco ::= L_CHAVES instrucoes:instr R_CHAVES
+       {:
+           RESULT = new BlocoNode(instr);
+       :};
 
+instrucoes ::= instrucao:inst
+              {:
+                InstrucoesNode instrucoesNode = new InstrucoesNode(inst);
+                  RESULT = instrucoesNode;
+              :}
+            | instrucao:inst instrucoes:instrs
+              {:
+                  if (instrs != null){
+                      instrs.instrucoes.add(inst);
+                      RESULT = instrs;
+                  } else {
+                      InstrucoesNode instrucoesNode = new InstrucoesNode(inst);
+                      RESULT = instrucoesNode;
+                  }
+              :};
 
-instrucoes ::= instrucao:instr
-            {:
-                InstrucoesNode instructions = new InstrucoesNode();
-                instructions.addInstrucao((InstrucaoNode)instr);
-                RESULT = instructions;
-            :}
-            | instrucao:instr instrucoes:instrs
-            {:
-                InstrucoesNode instructions = new InstrucoesNode();
-                instructions.addInstrucao((InstrucaoNode)instr);
-                instructions.addAllInstrucoes(((InstrucoesNode)instrs).instrucoes);
-                RESULT = instructions;
-            :};
-
-instrucao ::= FOR L_PARENTESES var_for VIRGULA condicoes VIRGULA atribuicao R_PARENTESES bloco
-           |  WHILE L_PARENTESES condicoes R_PARENTESES bloco
-           |  DO bloco WHILE L_PARENTESES condicoes R_PARENTESES PT_VIRGULA
-           |  IF L_PARENTESES condicoes R_PARENTESES bloco
-           |  IF L_PARENTESES condicoes R_PARENTESES bloco ELSE bloco
-           |  FUNCTION ID L_PARENTESES parametros R_PARENTESES DOIS_PONTOS tipo L_CHAVES instrucoes RETURN var PT_VIRGULA R_CHAVES
-           |  PROCEDURE ID L_PARENTESES parametros R_PARENTESES bloco
-           |  PROC ID L_PARENTESES argumentos R_PARENTESES PT_VIRGULA
-           |  inicializacao:x PT_VIRGULA {: :}
-           |  atribuicao PT_VIRGULA
+instrucao ::= FOR L_PARENTESES inicializacao:ini VIRGULA condicoes:condicoes VIRGULA atribuicao:atribd R_PARENTESES bloco:bloco {: RESULT = new ForNode(bloco, condicoes, atribd, ini);:}
+           |  FOR L_PARENTESES atribuicao:atrib VIRGULA condicoes:condicoes VIRGULA atribuicao:atribd R_PARENTESES bloco:bloco {: RESULT = new ForNode(bloco, condicoes, atribd, atrib);:}
+           |  FOR L_PARENTESES ID:id VIRGULA condicoes:condicoes VIRGULA atribuicao:atribd R_PARENTESES bloco:bloco {: RESULT = new ForNode(bloco, condicoes, atribd, id);:}
+           |  WHILE L_PARENTESES condicoes:condicoes R_PARENTESES bloco:bloco {: RESULT = new WhileNode(bloco, condicoes);:}
+           |  DO bloco:bloco WHILE L_PARENTESES condicoes:condicoes R_PARENTESES PT_VIRGULA {: RESULT = new WhileNode(bloco, condicoes);:}
+           |  IF L_PARENTESES condicoes:condicoes R_PARENTESES bloco:bloco {: RESULT = new IfNode(condicoes, bloco);:}
+           |  IF L_PARENTESES condicoes:condicoes R_PARENTESES bloco:bloco_if ELSE bloco:bloco_else {: RESULT = new IfElseNode(condicoes, bloco_if, bloco_else);:}
+           |  FUNCTION ID L_PARENTESES parametros:par R_PARENTESES DOIS_PONTOS tipo:tip bloco:blo RETURN var:var PT_VIRGULA {: RESULT = new FunctionNode(par, tip, blo, var);:}
+           |  PROCEDURE ID L_PARENTESES parametros:par R_PARENTESES bloco:blo {: RESULT = new ProcedureNode(par, blo);:}
+           |  PROC ID L_PARENTESES argumentos:arg R_PARENTESES PT_VIRGULA {: RESULT = new ProcNode(arg);:}
+           |  inicializacao:ini PT_VIRGULA {:RESULT = ini;:}
+           |  atribuicao:atrib PT_VIRGULA {: RESULT = atrib;:}
            |  declaracao:decl PT_VIRGULA {:RESULT = decl;:}
            ;
 
-condicoes ::= expressao | expressao operador_logico condicoes | expressao operador_comparacao condicoes;
+condicoes ::= expressao:exp
+           {:
+                CondicoesNode condicoesNode = new CondicoesNode();
+                condicoesNode.expressaoNodeStack.push(exp);
+                RESULT = condicoesNode;
+           :}
+           | expressao:exp operador_logico:op condicoes:condicoes
+           {:
+             if (condicoes != null){
+               condicoes.expressaoNodeStack.push(exp);
+               condicoes.operadorLogicoNodeStack.push(op);
+               RESULT = condicoes;
+             } else {
+                CondicoesNode condicoesNode = new CondicoesNode(exp, op);
+                RESULT = condicoesNode;
+             }
+           :}
+           | expressao:exp operador_comparacao:op condicoes:condicoes
+           {:
+            if (condicoes != null){
+              condicoes.expressaoNodeStack.push(exp);
+              condicoes.operadorComparacaoNodeStack.push(op);
+              RESULT = condicoes;
+            } else {
+              CondicoesNode condicoesNode = new CondicoesNode(exp, op, 1);
+              RESULT = condicoesNode;
+            }
+           :};
 
-parametros ::= parametro | parametro VIRGULA parametros | /* vazio */;
+parametros ::= parametro:p {: RESULT = new ParametrosNode(p);:}
+            | parametro:p VIRGULA parametros:pr
+            {:
+                if (pr != null){
+                    pr.parametrosNodes.add(p);
+                    RESULT = pr;
+                } else {
+                    ParametrosNode parametrosNodes = new ParametrosNode();
+                    parametrosNodes.parametrosNodes.add(p);
+                    RESULT = parametrosNodes;
+                }
+            :}
+            | /* vazio */;
 
-parametro ::= tipo ID;
+parametro ::= tipo:tipo ID:id {: RESULT = new ParametroNode(tipo, id);:};
 
-argumentos ::= expressao | expressao VIRGULA argumentos | /* vazio */;
+argumentos ::= expressao:exp
+            {:
+            ArgumentosNode argumentosNode = new ArgumentosNode();
+            argumentosNode.expressaoNodeStack.push(exp);
+            RESULT = argumentosNode;
+            :}
+            | expressao:exp VIRGULA argumentos:args
+            {:
+                 if (args != null){
+                 args.expressaoNodeStack.push(exp);
+                 RESULT = args;
+             } else {
+                 ArgumentosNode argumentosNode = new ArgumentosNode();
+                 argumentosNode.expressaoNodeStack.push(exp);
+                 RESULT = argumentosNode;
+             }
+            :}
+            | /* vazio */;
 
-expressoes ::= expressao | expressao operador expressoes;
+expressoes ::= expressao:exp
+            {:
+                ExpressoesNode expressoesNode = new ExpressoesNode(exp);
+                RESULT = expressoesNode;
+            :}
+            | expressao:exp operador:op expressoes:exprs
+            {:
+                if (exprs != null){
+                exprs.expressoes.push(exp);
+                exprs.operadorNodes.push(op);
+                RESULT = exprs;
+                } else {
+                    ExpressoesNode expressoesNode = new ExpressoesNode(exp, op);
+                    RESULT = expressoesNode;
+                }
+            :};
 
-expressao ::= var
+
+expressao ::= var:var
+           {:
+             RESULT = new ExpressaoNode(var);
+           :}
            |  ID L_PARENTESES argumentos R_PARENTESES
-           |  var operador_aritmetico var;
+           |  var:varA operador_aritmetico:op var:varB
+           {:
+              RESULT = new ExpressaoNode(varA, varB, op);
+           :};
 
-var ::= ID:id {: RESULT = new VarNode(id);:} | literal:lit {: RESULT = new VarNode(lit); :};
+var ::= ID:id {: RESULT = new VarNode(id);:}
+     | literal:lit {: RESULT = new VarNode(lit); :};
 
 literal ::= INTEIRO:x {: RESULT = new LiteralNode(x); :}
          | FLUTUANTE:x {: RESULT = new LiteralNode(x); :}
@@ -165,34 +246,33 @@ literal ::= INTEIRO:x {: RESULT = new LiteralNode(x); :}
          | BOOL_FALSE:x {: RESULT = new LiteralNode(x); :};
 
 
-var_for ::= inicializacao
-         |  atribuicao
-         |  ID;
-
-inicializacao ::= tipo ID IGUAL expressoes;
+inicializacao ::= tipo:tipo ID:id IGUAL expressoes:exprs {: RESULT = new InicializacaoNode(tipo, id, exprs);:};
 atribuicao ::= ID:id operador_atribuicao:op expressoes:expr {: RESULT = new AtribuicaoNode(id, op, expr); :};
 declaracao ::= tipo:tipo ID:id {: RESULT = new DeclaracaoNode(tipo, id);:};
 
-operador ::= operador_logico
-          | operador_aritmetico
-          | operador_comparacao;
+operador ::= operador_logico:x {: RESULT = x;:}
+          | operador_aritmetico:x {: RESULT = x;:}
+          | operador_comparacao:x {: RESULT = x;:};
 
-operador_logico ::= AND | OR;
-operador_comparacao ::= MENOR
-                     | MAIOR
-                     | IGUAL_IGUAL
-                     | DIFERENTE
-                     | MENOR_IGUAL
-                     | MAIOR_IGUAL;
-operador_aritmetico ::= ADD
-                     | SUB
-                     | MUL
-                     | DIV;
-operador_atribuicao ::= IGUAL
-                  | ADD_IGUAL
-                  | SUB_IGUAL;
+operador_logico ::= AND:x               {: RESULT = new OperadorLogicoNode(x); :}
+                 | OR:x                 {: RESULT = new OperadorLogicoNode(x); :};
+operador_comparacao ::= MENOR:x         {: RESULT = new OperadorComparacaoNode(x); :}
+                     | MAIOR:x          {: RESULT = new OperadorComparacaoNode(x); :}
+                     | IGUAL_IGUAL:x    {: RESULT = new OperadorComparacaoNode(x); :}
+                     | DIFERENTE:x      {: RESULT = new OperadorComparacaoNode(x); :}
+                     | MENOR_IGUAL:x    {: RESULT = new OperadorComparacaoNode(x); :}
+                     | MAIOR_IGUAL:x    {: RESULT = new OperadorComparacaoNode(x); :};
 
-tipo ::= TIPO_CHAR:x {: :}
-    | TIPO_FLUTUANTE:x{: :}
-    | TIPO_INTEIRO:x{: :}
-    | TIPO_BOOLEAN:x{: :};
+operador_aritmetico ::= ADD:x {: RESULT = new OperadorAritmeticoNode(x); :}
+                     | SUB:x  {: RESULT = new OperadorAritmeticoNode(x); :}
+                     | MUL:x  {: RESULT = new OperadorAritmeticoNode(x); :}
+                     | DIV:x  {: RESULT = new OperadorAritmeticoNode(x); :};
+
+operador_atribuicao ::= IGUAL:x {: RESULT = new OperadorAtribuicaoNode(x); :}
+                  | ADD_IGUAL:x {: RESULT = new OperadorAtribuicaoNode(x); :}
+                  | SUB_IGUAL:x {: RESULT = new OperadorAtribuicaoNode(x); :};
+
+tipo ::= TIPO_CHAR:x        {: RESULT = new TipoNode(x); :}
+      | TIPO_FLUTUANTE:x    {: RESULT = new TipoNode(x); :}
+      | TIPO_INTEIRO:x      {: RESULT = new TipoNode(x); :}
+      | TIPO_BOOLEAN:x      {: RESULT = new TipoNode(x); :};

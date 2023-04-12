@@ -1,4 +1,4 @@
 package ast;
 
-public class OperadorNode extends  ASTNode{
+public class OperadorNode extends ASTNode{
 }

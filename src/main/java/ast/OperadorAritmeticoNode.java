@@ -1,4 +1,11 @@
 package ast;
 
-public class OperadorAritmeticoNode extends  ASTNode{
+import misc.TokenInfo;
+
+public class OperadorAritmeticoNode extends  OperadorNode{
+    public TokenInfo tokenInfo;
+
+    public OperadorAritmeticoNode(TokenInfo tokenInfo) {
+        this.tokenInfo = tokenInfo;
+    }
 }

@@ -1,4 +1,13 @@
 package ast;
 
-public class ArgumentosNode extends  ASTNode{
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class ArgumentosNode extends ASTNode{
+    public Stack<ExpressaoNode> expressaoNodeStack = new Stack<>();
+
+    public ArgumentosNode(){
+
+    }
+
 }

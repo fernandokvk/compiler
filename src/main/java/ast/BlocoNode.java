@@ -1,15 +1,12 @@
 package ast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BlocoNode extends  ASTNode{
-    public List<InstrucaoNode> instrucoes;
+    public InstrucoesNode instrucoes;
     public BlocoNode(InstrucoesNode instrs){
-        instrucoes = new ArrayList<>();
+        this.instrucoes = instrs;
+        System.out.println("BlocoNode");
     }
 
-    public void addInstrucao(InstrucaoNode instrucaoNode){
-        instrucoes.add(instrucaoNode);
-    }
 }
