@@ -94,7 +94,6 @@ start with programa;
 init_programa ::= PRGRM_DEF L_PARENTESES ID R_PARENTESES DOIS_PONTOS {:/*blbalbal */:};
 programa ::= init_programa PRGRM_INI PRGRM_FIM | init_programa PRGRM_INI instrucoes PRGRM_FIM;
 
-// ------------------------------ Expressões ------------------------------
 expressoes ::= expressao | expressao operador expressoes;
 
 expressao ::= termo operador_comparacao termo
@@ -105,7 +104,6 @@ expressao ::= termo operador_comparacao termo
            | termo
            | operador termo;
 
-// ------------------------------ Instruções ------------------------------
 instrucoes ::= instrucao
             | instrucao instrucoes;
 
@@ -132,15 +130,12 @@ instrucao_atribuicao ::= ID operador_atribuicao CARACTERE
                       | ID operador_atribuicao booleanos
                       | ID operador_atribuicao fun_chamada
                       | ID operador_atribuicao expressoes;
-//int i;
 instrucao_definicao ::= tipo ID;
-//int i = 0;
 instrucao_inicializacao ::= tipo ID operador_atribuicao CARACTERE
                         | tipo ID operador_atribuicao booleanos
                         | tipo ID:id operador_atribuicao fun_chamada {::}
                         | tipo:tp ID:id operador_atribuicao:op expressoes:expr {::};
 
-// ------------------------------ Loops ------------------------------
 bloco_if ::= IF L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
 bloco_if_else ::= bloco_if ELSE L_CHAVES instrucoes R_CHAVES;
 
@@ -150,7 +145,6 @@ bloco_for ::= FOR L_PARENTESES ID VIRGULA expressoes VIRGULA instrucao_atribuica
 bloco_while ::= WHILE L_PARENTESES expressoes R_PARENTESES L_CHAVES instrucoes R_CHAVES;
 bloco_do_while ::= DO L_CHAVES instrucoes R_CHAVES WHILE L_PARENTESES expressoes R_PARENTESES PT_VIRGULA;
 
-// ------------------------------ Função ------------------------------
 bloco_fun ::= FUNCTION ID L_PARENTESES parametros_lst R_PARENTESES DOIS_PONTOS tipo L_CHAVES instrucoes R_CHAVES {:System.out.println("bloco_fun");:};
 
 fun_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
@@ -170,7 +164,6 @@ bloco_proc ::= PROCEDURE ID L_PARENTESES parametros_lst R_PARENTESES L_CHAVES in
 
 proc_chamada ::= ID L_PARENTESES argumentos_lst R_PARENTESES;
 
-// ------------------------------ Base ------------------------------
 literal ::= numero
          | CARACTERE
          | booleanos;

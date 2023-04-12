@@ -1,8 +1,6 @@
-import ast.ASTNode;
-import ast.ProgramaNode;
 import flex.*;
 import cup.*;
-
+import semantics.SemanticAnalyzer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,13 +16,6 @@ public class Entry {
         };
         FileReader[] files = getFiles(filenames);
         runLexer(filenames, files);
-        /*
-         Definicao
-            Inicializacao -> int i = 0;
-            Declaracao -> int i;
-        Atribuicao -> i = 0;
-        Uso -> i;
-         */
     }
 
     private static void runLexer(String[] filenames, FileReader[] files) throws IOException {
@@ -36,7 +27,9 @@ public class Entry {
             System.out.println("\nArquivo:\t" + filenames[i]);
             try {
                 parser parser = new parser(lexer);
-                ProgramaNode raiz = (ProgramaNode) parser.parse().value;
+                Object raiz = parser.parse().value;
+                SemanticAnalyzer saz = new SemanticAnalyzer(raiz);
+                saz.run();
 
                 System.out.println("Fim:\t\t" + filenames[i]);
             } catch (Lexer.ErroLexico e) {
