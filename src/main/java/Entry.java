@@ -1,24 +1,35 @@
 import flex.*;
 import cup.*;
 import semantics.SemanticAnalyzer;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class Entry {
     public static void main(String[] args) throws IOException {
-        String[] filenames = {
-//                "testes/expressoes.big",
-//                "testes/funcao.big",
-//                "testes/mini.big",
-//                "testes/declaracoes.big",
-//                "testes/teste1.big",
-                "testes/teste2.big",
-//                "testes/if_else.big",
-//                "testes/controle.big",
-        };
+        String[] filenames;
+        if (args.length > 0) {
+            filenames = getNamesFromArgs(args);
+        } else {
+            filenames = getTestes();
+        }
+
         FileReader[] files = getFiles(filenames);
         runLexer(filenames, files);
+    }
+
+    private static String[] getTestes() {
+        return new String[]{
+                "testes/expressoes.big",
+                "testes/funcao.big",
+                "testes/mini.big",
+                "testes/declaracoes.big",
+                "testes/teste1.big",
+                "testes/teste2.big",
+                "testes/if_else.big",
+                "testes/controle.big",
+        };
     }
 
     private static void runLexer(String[] filenames, FileReader[] files) throws IOException {
@@ -52,9 +63,29 @@ public class Entry {
                 FileReader file = new FileReader(s);
                 files[i] = file;
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                System.err.println("Arquivo não encontrado: " + s);
+                System.exit(1);
             }
         }
         return files;
     }
+    private static String[] getNamesFromArgs(String[] args){
+        String[] filenames = new String[]{};
+        boolean allValid = true;
+        for (String arg : args) {
+            if (arg == null || arg.trim().isEmpty()) {
+                allValid = false;
+                break;
+            }
+        }
+        if (allValid) {
+            filenames = args;
+        } else {
+            System.err.println("Invalid file names provided. Using default file names.");
+            filenames = getTestes();
+        }
+        return filenames;
+    }
+
+
 }

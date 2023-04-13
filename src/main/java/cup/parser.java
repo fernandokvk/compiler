@@ -621,6 +621,9 @@ class CUP$parser$actions {
           case 13: // instrucao ::= FUNCTION ID L_PARENTESES parametros R_PARENTESES DOIS_PONTOS tipo bloco RETURN var PT_VIRGULA 
             {
               InstrucaoNode RESULT =null;
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-9)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-9)).right;
+		TokenInfo id = (TokenInfo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-9)).value;
 		int parleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)).left;
 		int parright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)).right;
 		ParametrosNode par = (ParametrosNode)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-7)).value;
@@ -633,7 +636,7 @@ class CUP$parser$actions {
 		int varleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
 		int varright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		VarNode var = (VarNode)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		 RESULT = new FunctionNode(par, tip, blo, var);
+		 RESULT = new FunctionNode(id,par, tip, blo, var);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("instrucao",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-10)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -709,8 +712,7 @@ class CUP$parser$actions {
 		int expright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		ExpressaoNode exp = (ExpressaoNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
-                CondicoesNode condicoesNode = new CondicoesNode();
-                condicoesNode.expressaoNodeStack.add(exp);
+                CondicoesNode condicoesNode = new CondicoesNode(exp);
                 RESULT = condicoesNode;
            
               CUP$parser$result = parser.getSymbolFactory().newSymbol("condicoes",5, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -940,7 +942,15 @@ class CUP$parser$actions {
           case 32: // expressao ::= ID L_PARENTESES argumentos R_PARENTESES 
             {
               ExpressaoNode RESULT =null;
-
+		int idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		TokenInfo id = (TokenInfo)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int argsleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int argsright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		ArgumentosNode args = (ArgumentosNode)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+             RESULT = new ExpressaoNode(id, args);
+           
               CUP$parser$result = parser.getSymbolFactory().newSymbol("expressao",7, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

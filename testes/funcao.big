@@ -1,16 +1,16 @@
 program (funcao):
 begin{
-    function foo(int a, int b, float c): int{
+    function foo(int a, int b, int c): int{
         b = a * c;
     } return b;
-    function foo(): int{
+    int a = foo(10, 20, 30);
+    function eba(): int{
         a = b;
     } return b;
 
-    int a = foo(10, 20, 30);
     int b = foo(x, y, z);
     int x = foo(x);
-    int z = foo(10);
+    int y = foo(10);
 
     procedure bar(int i){
         int x = y;

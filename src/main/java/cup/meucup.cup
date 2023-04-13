@@ -135,7 +135,7 @@ instrucao ::= FOR L_PARENTESES inicializacao:ini VIRGULA condicoes:condicoes VIR
            |  DO bloco:bloco WHILE L_PARENTESES condicoes:condicoes R_PARENTESES PT_VIRGULA {: RESULT = new WhileNode(bloco, condicoes);:}
            |  IF L_PARENTESES condicoes:condicoes R_PARENTESES bloco:bloco {: RESULT = new IfNode(condicoes, bloco);:}
            |  IF L_PARENTESES condicoes:condicoes R_PARENTESES bloco:bloco_if ELSE bloco:bloco_else {: RESULT = new IfElseNode(condicoes, bloco_if, bloco_else);:}
-           |  FUNCTION ID L_PARENTESES parametros:par R_PARENTESES DOIS_PONTOS tipo:tip bloco:blo RETURN var:var PT_VIRGULA {: RESULT = new FunctionNode(par, tip, blo, var);:}
+           |  FUNCTION ID:id L_PARENTESES parametros:par R_PARENTESES DOIS_PONTOS tipo:tip bloco:blo RETURN var:var PT_VIRGULA {: RESULT = new FunctionNode(id,par, tip, blo, var);:}
            |  PROCEDURE ID L_PARENTESES parametros:par R_PARENTESES bloco:blo {: RESULT = new ProcedureNode(par, blo);:}
            |  PROC ID L_PARENTESES argumentos:arg R_PARENTESES PT_VIRGULA {: RESULT = new ProcNode(arg);:}
            |  inicializacao:ini PT_VIRGULA {:RESULT = ini;:}
@@ -230,7 +230,10 @@ expressao ::= var:var
            {:
              RESULT = new ExpressaoNode(var);
            :}
-           |  ID L_PARENTESES argumentos R_PARENTESES
+           |  ID:id L_PARENTESES argumentos:args R_PARENTESES
+           {:
+             RESULT = new ExpressaoNode(id, args);
+           :}
            |  var:varA operador_aritmetico:op var:varB
            {:
               RESULT = new ExpressaoNode(varA, varB, op);
