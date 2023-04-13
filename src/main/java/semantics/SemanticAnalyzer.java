@@ -371,7 +371,6 @@ public class SemanticAnalyzer {
                     if (symA == sym.INTEIRO && symB == sym.INTEIRO) return sym.INTEIRO;
                     else if (symA == sym.FLUTUANTE && symB == sym.FLUTUANTE) return sym.FLUTUANTE;
                 } else if (expressaoNode.varA.literalNode == null && expressaoNode.varB.literalNode != null){
-                    System.out.println("SemanticAnalyzer.parseExpressao");
                     symA = switchTipoVarParaVar(checkTabelaSimbolo(expressaoNode.varA.id.lexema));
                     symB = expressaoNode.varB.literalNode.tokenInfo.sym;
                     if (symA == sym.INTEIRO && symB == sym.INTEIRO) return sym.INTEIRO;
