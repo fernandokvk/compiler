@@ -1,8 +1,25 @@
 import java_cup.runtime.*;
 
-terminal PTVIRG, MAIS, MENOS, INTEIRO;
-nonterminal expr_list, expr_ptv, expr;
+terminal TokenInfoMAIS, MENOS, INTEIRO, FLUTUANTE, ID;
+nonterminal ExpressoesNode expressoes;
+nonterminal ExpressaoNode expressao;
+nonterminal TermoNode termo;
+nonterminal OperacaoNode operacao;
 
-expr_list ::= expr_list expr_ptv | expr_ptv;
-expr_ptv ::= expr PTVIRG;
-expr ::= INTEIRO MAIS expr | INTEIRO MENOS expr | INTEIRO;
+expressoes ::=
+ expressao:exp                  {: RESULT = new ExpressoesNode(exp);:}
+|expressao:exp expressoes:exprs {: RESULT = new ExpressoesNode(exp, exprs);:};
+
+expressao ::=
+ termo:a operacao:b expressao:c  {: RESULT = new ExpressaoNode(a, b, c);:}
+|termo:a operacao:b expressao:c  {: RESULT = new ExpressaoNode(a, b, c);:}
+|termo:a                         {: RESULT = new ExpressaoNode(a);:};
+
+operacao::=
+ MAIS:a  {: RESULT = new OperacaoNode(a);:}
+|MENOS:a {: RESULT = new OperacaoNode(a);:};
+
+termo ::=
+ ID:x        {: RESULT = new TokenInfo(x;):}
+|INTEIRO:x   {: RESULT = new TokenInfo(x);:}
+|FLUTUANTE:x {: RESULT = new TokenInfo(x);:};

@@ -21,14 +21,15 @@ public class Entry {
 
     private static String[] getTestes() {
         return new String[]{
-                "testes/expressoes.big",
-                "testes/funcao.big",
-                "testes/mini.big",
-                "testes/declaracoes.big",
-                "testes/teste1.big",
-                "testes/teste2.big",
-                "testes/if_else.big",
-                "testes/controle.big",
+//                "testes/expressoes.big",
+//                "testes/funcao.big",
+//                "testes/mini.big",
+//                "testes/declaracoes.big",
+//                "testes/teste1.big",
+//                "testes/teste2.big",
+//                "testes/if_else.big",
+//                "testes/controle.big",
+                "testes/erro_lexico.big"
         };
     }
 

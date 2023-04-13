@@ -4,7 +4,7 @@ int big = 0;
     if (big >= 10){
         big = 1;
     }
-    if (big and true){
+    if (big < 0){
         big = 1;
     }
     if (big + 2 > big){
