@@ -1,6 +1,10 @@
 program (declaracoes):
 begin{
+    int a = 0;
+    int b;
+    b = a;
     int i = 0;
     char a = 'b';
-    float d = 22 * 22;
+    float d = 22.2 * 22.2;
+    int x = b;
 }end

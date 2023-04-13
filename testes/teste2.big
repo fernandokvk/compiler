@@ -1,0 +1,15 @@
+program (teste2):
+begin{
+    int a = 100;
+    function foo(int a, int b, float c): int{
+           b = a * a;
+    } return 10;
+    procedure bar(int i){
+            int x = 100;
+    }
+    int z;
+    proc bar(z);
+    while (z > 10){
+        z += 100;
+    }
+}end

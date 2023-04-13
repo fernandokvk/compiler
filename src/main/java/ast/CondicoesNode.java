@@ -1,13 +1,14 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class CondicoesNode extends  ASTNode{
-    public Stack<ExpressaoNode> expressaoNodeStack = new Stack<>();
-    public Stack<OperadorLogicoNode> operadorLogicoNodeStack = new Stack<>();
-    public Stack<OperadorComparacaoNode> operadorComparacaoNodeStack = new Stack<>();
+    public ArrayList<ExpressaoNode> expressaoNodeStack = new ArrayList<>();
+    public ArrayList<OperadorLogicoNode> operadorLogicoNodeStack = new ArrayList<>();
+    public ArrayList<OperadorComparacaoNode> operadorComparacaoNodeStack = new ArrayList<>();
 
-    public CondicoesNode(Stack<ExpressaoNode> expressaoNodeStack, Stack<OperadorLogicoNode> operadorLogicoNodeStack, Stack<OperadorComparacaoNode> operadorComparacaoNodeStack) {
+    public CondicoesNode(ArrayList<ExpressaoNode> expressaoNodeStack, ArrayList<OperadorLogicoNode> operadorLogicoNodeStack, ArrayList<OperadorComparacaoNode> operadorComparacaoNodeStack) {
         this.expressaoNodeStack = expressaoNodeStack;
         this.operadorLogicoNodeStack = operadorLogicoNodeStack;
         this.operadorComparacaoNodeStack = operadorComparacaoNodeStack;
@@ -16,13 +17,17 @@ public class CondicoesNode extends  ASTNode{
     public CondicoesNode(){
     }
 
+    public CondicoesNode(ExpressaoNode expressaoNode){
+        expressaoNodeStack.add(expressaoNode);
+    }
+
     public CondicoesNode(ExpressaoNode expressaoNode, OperadorLogicoNode operadorLogicoNode) {
-        this.expressaoNodeStack.push(expressaoNode);
-        this.operadorLogicoNodeStack.push(operadorLogicoNode);
+        this.expressaoNodeStack.add(expressaoNode);
+        this.operadorLogicoNodeStack.add(operadorLogicoNode);
     }
 
     public CondicoesNode(ExpressaoNode expressaoNode, OperadorComparacaoNode operadorComparacaoNode, int flag) {
-        this.expressaoNodeStack.push(expressaoNode);
-        this.operadorComparacaoNodeStack.push(operadorComparacaoNode);
+        this.expressaoNodeStack.add(expressaoNode);
+        this.operadorComparacaoNodeStack.add(operadorComparacaoNode);
     }
 }

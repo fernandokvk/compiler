@@ -1,20 +1,21 @@
 package ast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Stack;
 
 public class ExpressoesNode extends ASTNode {
 
-    public Stack<ExpressaoNode> expressoes = new Stack<>();
-    public Stack<OperadorAritmeticoNode> operadorNodes = new Stack<>();
+    public ArrayList<ExpressaoNode> expressoes = new ArrayList<>();
+    public ArrayList<OperadorAritmeticoNode> operadorNodes = new ArrayList<>();
 
     public ExpressoesNode(ExpressaoNode expressaoNode) {
-        expressoes.push(expressaoNode);
+        expressoes.add(expressaoNode);
     }
 
     public ExpressoesNode(ExpressaoNode expressaoNode, OperadorAritmeticoNode operadorNode) {
-        expressoes.push(expressaoNode);
-        operadorNodes.push(operadorNode);
+        expressoes.add(expressaoNode);
+        operadorNodes.add(operadorNode);
     }
 
 }

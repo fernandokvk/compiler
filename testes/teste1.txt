@@ -1,5 +1,0 @@
-abcde
-abc_12
-_abc123
-123abcd
-123abc234 23

@@ -145,15 +145,14 @@ instrucao ::= FOR L_PARENTESES inicializacao:ini VIRGULA condicoes:condicoes VIR
 
 condicoes ::= expressao:exp
            {:
-                CondicoesNode condicoesNode = new CondicoesNode();
-                condicoesNode.expressaoNodeStack.push(exp);
+                CondicoesNode condicoesNode = new CondicoesNode(exp);
                 RESULT = condicoesNode;
            :}
            | expressao:exp operador_logico:op condicoes:condicoes
            {:
              if (condicoes != null){
-               condicoes.expressaoNodeStack.push(exp);
-               condicoes.operadorLogicoNodeStack.push(op);
+               condicoes.expressaoNodeStack.add(exp);
+               condicoes.operadorLogicoNodeStack.add(op);
                RESULT = condicoes;
              } else {
                 CondicoesNode condicoesNode = new CondicoesNode(exp, op);
@@ -163,14 +162,16 @@ condicoes ::= expressao:exp
            | expressao:exp operador_comparacao:op condicoes:condicoes
            {:
             if (condicoes != null){
-              condicoes.expressaoNodeStack.push(exp);
-              condicoes.operadorComparacaoNodeStack.push(op);
+              condicoes.expressaoNodeStack.add(exp);
+              condicoes.operadorComparacaoNodeStack.add(op);
               RESULT = condicoes;
             } else {
               CondicoesNode condicoesNode = new CondicoesNode(exp, op, 1);
               RESULT = condicoesNode;
             }
            :};
+
+
 
 parametros ::= parametro:p {: RESULT = new ParametrosNode(p);:}
             | parametro:p VIRGULA parametros:pr
@@ -191,17 +192,17 @@ parametro ::= tipo:tipo ID:id {: RESULT = new ParametroNode(tipo, id);:};
 argumentos ::= expressao:exp
             {:
             ArgumentosNode argumentosNode = new ArgumentosNode();
-            argumentosNode.expressaoNodeStack.push(exp);
+            argumentosNode.expressaoNodeStack.add(exp);
             RESULT = argumentosNode;
             :}
             | expressao:exp VIRGULA argumentos:args
             {:
                  if (args != null){
-                 args.expressaoNodeStack.push(exp);
+                 args.expressaoNodeStack.add(exp);
                  RESULT = args;
              } else {
                  ArgumentosNode argumentosNode = new ArgumentosNode();
-                 argumentosNode.expressaoNodeStack.push(exp);
+                 argumentosNode.expressaoNodeStack.add(exp);
                  RESULT = argumentosNode;
              }
             :}
@@ -215,8 +216,8 @@ expressoes ::= expressao:exp
             | expressao:exp operador_aritmetico:op expressoes:exprs
             {:
                 if (exprs != null){
-                exprs.expressoes.push(exp);
-                exprs.operadorNodes.push(op);
+                exprs.expressoes.add(exp);
+                exprs.operadorNodes.add(op);
                 RESULT = exprs;
                 } else {
                     ExpressoesNode expressoesNode = new ExpressoesNode(exp, op);

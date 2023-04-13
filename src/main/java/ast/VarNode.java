@@ -13,4 +13,13 @@ public class VarNode {
     public VarNode(LiteralNode literalNode) {
         this.literalNode = literalNode;
     }
+
+    @Override
+    public String toString() {
+        if (literalNode == null){
+            return id.lexema;
+        } else {
+            return literalNode.toString();
+        }
+    }
 }

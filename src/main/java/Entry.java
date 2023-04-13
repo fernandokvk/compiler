@@ -10,8 +10,11 @@ public class Entry {
         String[] filenames = {
 //                "testes/expressoes.big",
 //                "testes/funcao.big",
-                "testes/mini.big",
+//                "testes/mini.big",
 //                "testes/declaracoes.big",
+//                "testes/teste1.big",
+                "testes/teste2.big",
+//                "testes/if_else.big",
 //                "testes/controle.big",
         };
         FileReader[] files = getFiles(filenames);
@@ -30,7 +33,6 @@ public class Entry {
                 Object raiz = parser.parse().value;
                 SemanticAnalyzer saz = new SemanticAnalyzer(raiz);
                 saz.run();
-
                 System.out.println("Fim:\t\t" + filenames[i]);
             } catch (Lexer.ErroLexico e) {
                 System.err.println(e.getMessage());

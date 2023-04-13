@@ -1,0 +1,16 @@
+program (teste1):
+begin{
+    int a = 100;
+    int i = 0;
+    for (a, i < a, i += 1){
+            int x = a;
+    }
+    for (int i = 0, i < a, i += 1){
+                int x = a;
+    }
+    int c;
+    for (c = a, i < a, i += 1){
+                    int x = a;
+    }
+    int b = 5;
+}end

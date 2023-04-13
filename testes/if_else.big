@@ -1,0 +1,9 @@
+program (teste2):
+begin{
+    int a = 100;
+    if(a > 1000){
+        a = 100;
+    } else {
+        a = 10;
+    }
+}end

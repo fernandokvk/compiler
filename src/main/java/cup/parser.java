@@ -710,7 +710,7 @@ class CUP$parser$actions {
 		ExpressaoNode exp = (ExpressaoNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
                 CondicoesNode condicoesNode = new CondicoesNode();
-                condicoesNode.expressaoNodeStack.push(exp);
+                condicoesNode.expressaoNodeStack.add(exp);
                 RESULT = condicoesNode;
            
               CUP$parser$result = parser.getSymbolFactory().newSymbol("condicoes",5, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -732,8 +732,8 @@ class CUP$parser$actions {
 		CondicoesNode condicoes = (CondicoesNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
              if (condicoes != null){
-               condicoes.expressaoNodeStack.push(exp);
-               condicoes.operadorLogicoNodeStack.push(op);
+               condicoes.expressaoNodeStack.add(exp);
+               condicoes.operadorLogicoNodeStack.add(op);
                RESULT = condicoes;
              } else {
                 CondicoesNode condicoesNode = new CondicoesNode(exp, op);
@@ -759,8 +759,8 @@ class CUP$parser$actions {
 		CondicoesNode condicoes = (CondicoesNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
             if (condicoes != null){
-              condicoes.expressaoNodeStack.push(exp);
-              condicoes.operadorComparacaoNodeStack.push(op);
+              condicoes.expressaoNodeStack.add(exp);
+              condicoes.operadorComparacaoNodeStack.add(op);
               RESULT = condicoes;
             } else {
               CondicoesNode condicoesNode = new CondicoesNode(exp, op, 1);
@@ -840,7 +840,7 @@ class CUP$parser$actions {
 		ExpressaoNode exp = (ExpressaoNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
             ArgumentosNode argumentosNode = new ArgumentosNode();
-            argumentosNode.expressaoNodeStack.push(exp);
+            argumentosNode.expressaoNodeStack.add(exp);
             RESULT = argumentosNode;
             
               CUP$parser$result = parser.getSymbolFactory().newSymbol("argumentos",8, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
@@ -859,11 +859,11 @@ class CUP$parser$actions {
 		ArgumentosNode args = (ArgumentosNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
                  if (args != null){
-                 args.expressaoNodeStack.push(exp);
+                 args.expressaoNodeStack.add(exp);
                  RESULT = args;
              } else {
                  ArgumentosNode argumentosNode = new ArgumentosNode();
-                 argumentosNode.expressaoNodeStack.push(exp);
+                 argumentosNode.expressaoNodeStack.add(exp);
                  RESULT = argumentosNode;
              }
             
@@ -910,8 +910,8 @@ class CUP$parser$actions {
 		ExpressoesNode exprs = (ExpressoesNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
 		
                 if (exprs != null){
-                exprs.expressoes.push(exp);
-                exprs.operadorNodes.push(op);
+                exprs.expressoes.add(exp);
+                exprs.operadorNodes.add(op);
                 RESULT = exprs;
                 } else {
                     ExpressoesNode expressoesNode = new ExpressoesNode(exp, op);
